@@ -4,6 +4,7 @@ Account Service
 This microservice handles the lifecycle of Accounts
 """
 # pylint: disable=unused-import
+import json
 from flask import jsonify, request, make_response, abort, url_for   # noqa; F401
 from service.models import Account
 from service.common import status  # HTTP Status Codes
@@ -61,7 +62,18 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
-# ... place you code here to LIST accounts ...
+@app.route("/accounts", methods=["GET"])
+def list_accounts():
+    """
+    List all Accounts
+    This endpoint returns all Accounts as a list
+    """
+    accounts = Account.all()
+    if not accounts:
+        return json.dumps([], default=str), status.HTTP_200_OK
+    return make_response(
+        json.dumps(accounts, default=str), status.HTTP_200_OK
+    )
 
 
 ######################################################################
